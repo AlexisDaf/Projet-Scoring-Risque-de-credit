@@ -1,36 +1,110 @@
-# ANALYSE DU RISQUE DE DÉFAUT DE CRÉDIT
+# Prédiction du risque de défaut de crédit
 
+### Projet de Data Science — Home Credit Default Risk
 
-### Motivations : 
+## Présentation
 
-Au cours de ma formation en mathématiques et en machine learning, j’ai principalement été confronté à des problématiques méthodologiques et techniques. Afin de compléter cette approche, je souhaite désormais explorer davantage les applications du machine learning dans des contextes business concrets. L’analyse du risque de défaut de crédit représente un domaine particulièrement pertinent pour cette exploration, car il s’agit d’un problème bien identifié dans le secteur financier et largement étudié dans la littérature en data science.
+Ce projet de machine learning porte sur la prédiction du risque de défaut de crédit à partir du jeu de données **Home Credit Default Risk**, disponible sur Kaggle.
 
+L'objectif est de comparer deux algorithmes de classification supervisée, la **régression logistique** et **LightGBM**, afin d'étudier l'influence de l'enrichissement progressif des données sur leurs performances prédictives.
 
-### Présentation du dataset : 
-Le dataset Home Credit Default Risk, disponible sur la plateforme Kaggle, provient d’une compétition organisée par la société financière Home Credit. L’objectif du jeu de données est de prédire la probabilité qu’un client fasse défaut sur un prêt, c’est-à-dire qu’il rencontre des difficultés significatives pour rembourser son crédit.
-Le dataset contient des informations anonymisées sur des demandeurs de crédit, incluant des caractéristiques démographiques, financières et comportementales. Il est structuré autour d’une table principale contenant les informations liées aux demandes de prêt actuelles, ainsi que plusieurs tables complémentaires décrivant l’historique de crédit des clients, leurs prêts précédents, leurs paiements et leurs interactions avec différentes institutions financières.
-La variable cible du problème est une variable binaire indiquant si le client a effectivement rencontré des difficultés de remboursement. Le jeu de données présente plusieurs caractéristiques typiques des problèmes de scoring de crédit, notamment un déséquilibre des classes entre les cas de défaut et les cas sans défaut, ainsi qu’un grand nombre de variables hétérogènes (numériques et catégorielles). Ces caractéristiques en font un cas d’étude particulièrement pertinent pour l’application de méthodes de machine learning dans le domaine de la gestion du risque de crédit.
+L'analyse repose sur **307 511 observations** et sur plusieurs sources d'informations relatives aux demandeurs de crédit.
 
-### Résultats et enseignements du projet
-L’objectif principal de ce projet n’était pas d’obtenir la meilleure performance prédictive possible, mais plutôt de se familiariser avec un cas d’usage classique d’analyse de données dans le secteur bancaire : l’évaluation du risque de défaut de crédit. Le travail réalisé s’est donc concentré sur la compréhension des données, l’identification de facteurs de risque pertinents et la construction progressive d’un modèle de scoring simple.
-Dans un premier temps, une phase d’exploration des données a permis d’analyser la structure du dataset et les caractéristiques principales du portefeuille de crédit. L’étude de la variable cible montre un taux de défaut d’environ 8 %, ce qui correspond à un problème fortement déséquilibré, typique des problématiques de risque de crédit. Cette observation justifie l’utilisation de métriques adaptées comme le ROC-AUC plutôt que l’accuracy pour évaluer les modèles.
-Une analyse exploratoire a ensuite été menée afin d’identifier certains déterminants du risque. Trois variables principales ont été étudiées : l’âge des clients, leur niveau de revenu et leur taux d’endettement approximatif (DTI). Cette analyse a permis de mettre en évidence plusieurs tendances cohérentes avec l’intuition économique, notamment un risque plus élevé pour les clients jeunes et pour les profils présentant un niveau d’endettement important. La construction d’un indicateur simple de ratio dette / revenu a notamment permis d’illustrer le rôle central de la capacité de remboursement dans l’évaluation du risque de crédit.
-Sur cette base, un premier modèle de régression logistique a été construit en utilisant uniquement ces variables financières fondamentales. Ce modèle de base atteint un ROC-AUC d’environ 0.59, ce qui montre que ces variables contiennent une information utile sur le risque de défaut, tout en restant insuffisantes pour produire un modèle prédictif performant.
-Dans un second temps, des informations supplémentaires issues de l’historique de crédit des clients ont été intégrées au modèle, notamment le nombre total de crédits passés, le nombre de crédits actifs ou clôturés, ainsi que des indicateurs liés aux retards de paiement. L’intégration progressive de ces variables comportementales a permis d’améliorer les performances du modèle. Le modèle final atteint ainsi un ROC-AUC d’environ 0.66, ce qui constitue une amélioration notable par rapport au modèle initial et illustre l’importance de l’historique de crédit dans l’évaluation du risque.
-Ce projet permet ainsi de reproduire, à une échelle simplifiée, les principales étapes d’un projet de modélisation du risque de crédit : exploration des données, construction d’indicateurs économiques, analyse du risque et modélisation prédictive. Au-delà de la performance du modèle, l’intérêt principal réside dans la compréhension des mécanismes sous-jacents à l’évaluation du risque et dans la découverte des méthodes utilisées dans le secteur bancaire.
+## Problématique
 
-### Limites du projet
+**Dans quelle mesure l'enrichissement progressif des données améliore-t-il la prédiction du risque de défaut de crédit, et quel algorithme présente les meilleures performances ?**
 
-Ce projet avait pour objectif principal de se familiariser avec une problématique typique d’analyse de données dans le secteur bancaire, à savoir la prédiction du risque de défaut de crédit. Dans cette optique, certaines simplifications ont volontairement été faites, ce qui entraîne plusieurs limites.
-Tout d’abord, le modèle a été construit à partir d’un nombre relativement limité de variables explicatives. L’analyse s’est concentrée sur quelques indicateurs simples et interprétables, tels que l’âge, le revenu ou certains éléments liés à l’historique de crédit. Or, dans un contexte réel, les modèles de scoring reposent généralement sur un ensemble beaucoup plus large de variables issues de différentes sources de données.
-Par ailleurs, bien qu’une pondération des classes ait été mise en place afin de tenir compte du déséquilibre entre les clients en défaut et ceux qui ne le sont pas, cette modification n’a pas permis d’améliorer significativement les performances du modèle. Ce résultat suggère que la principale limite du modèle provient davantage du manque d’information dans les variables utilisées que du traitement du déséquilibre des classes.
-Enfin, l’interprétation du modèle reste relativement simple. Les coefficients de la régression logistique ont été analysés afin d’identifier les variables ayant le plus d’influence sur la prédiction du risque. Cette approche permet d’obtenir une première compréhension du rôle des différentes variables, mais elle ne fournit pas une analyse détaillée de l’impact des variables au niveau des prédictions individuelles.
+## Méthodologie
 
-### Pistes d’amélioration
+Le projet suit plusieurs étapes :
 
-Plusieurs pistes pourraient être explorées afin d’améliorer ce projet et d’approfondir l’analyse du risque de défaut.
-Une première amélioration consisterait à enrichir le jeu de variables en exploitant davantage les différentes tables du dataset. Toutefois, l’ajout direct de nouvelles variables brutes n’apporte pas nécessairement une information pertinente pour le modèle. Dans de nombreux projets de scoring, la valeur ajoutée provient plutôt de la construction d’indicateurs synthétiques ou de KPI métiers permettant de mieux résumer la situation financière ou le comportement de crédit des clients.
-Dans cette perspective, un travail plus approfondi de feature engineering orienté métier pourrait être mené afin de construire des indicateurs plus informatifs. Par exemple, il serait possible de créer des KPI décrivant la stabilité financière des clients, la fréquence de leurs demandes de crédit, leur historique de retards de paiement ou encore l’évolution de leur niveau d’endettement au cours du temps. Ce type d’indicateurs permet généralement de mieux capturer les mécanismes économiques associés au risque de défaut.
-Une autre piste d’amélioration serait d’explorer d’autres modèles de machine learning, tels que les méthodes d’arbres de décision ou les algorithmes de gradient boosting, qui sont souvent utilisés dans les compétitions de data science pour améliorer la performance prédictive lorsque les relations entre variables sont complexes ou non linéaires.
-Enfin, l’analyse de l’interprétabilité du modèle pourrait être approfondie. Bien que l’étude des coefficients de la régression logistique fournisse déjà une première lecture des facteurs influençant le risque, des méthodes d’explication plus avancées pourraient permettre d’analyser plus finement l’impact des variables sur les prédictions du modèle.
+1. Exploration et analyse descriptive des données.
+2. Préparation des données et construction de nouvelles variables.
+3. Séparation des observations en ensembles d'entraînement, de validation et de test.
+4. Entraînement de la régression logistique et de LightGBM.
+5. Optimisation des hyperparamètres par validation croisée stratifiée.
+6. Comparaison progressive des performances.
+7. Analyse de l'importance des variables et évaluation du modèle retenu.
 
+La **ROC-AUC** est utilisée comme métrique principale de sélection.
+
+L'**Average Precision** constitue une métrique complémentaire adaptée au déséquilibre de la variable cible.
+
+## Enrichissement progressif des données
+
+Cinq configurations ont été étudiées.
+
+| Étape | Sources de données             | Variables |
+| ----- | ------------------------------ | --------: |
+| M0    | Application                    |         3 |
+| M1    | Application + Bureau           |         9 |
+| M2    | Ajout de Previous Application  |        13 |
+| M3    | Ajout de Installments Payments |        17 |
+| M4    | Ajout des variables EXT_SOURCE |        20 |
+
+Cette approche permet d'évaluer l'apport de chaque nouvelle configuration de données.
+
+## Résultats
+
+### Évolution de la ROC-AUC sur validation
+
+| Configuration       | Régression logistique |   LightGBM |
+| ------------------- | --------------------: | ---------: |
+| M0 — Application    |                0,5888 |     0,5975 |
+| M1 — Bureau         |                0,6185 |     0,6290 |
+| M2 — Previous       |                0,6391 |     0,6503 |
+| M3 — Installments   |                0,6518 |     0,6638 |
+| **M4 — EXT_SOURCE** |            **0,7338** | **0,7443** |
+
+### Meilleur modèle
+
+**LightGBM — Configuration M4**
+
+* ROC-AUC sur validation : **0,7443**
+* Average Precision : **0,2257**
+* Nombre de variables : **20**
+
+LightGBM présente les meilleures performances sur les cinq configurations étudiées.
+
+### Principaux enseignements
+
+**1. L'enrichissement des données améliore la prédiction.**
+
+Les performances des deux algorithmes progressent à mesure que de nouvelles sources de données sont intégrées.
+
+**2. LightGBM surpasse la régression logistique.**
+
+L'algorithme obtient une ROC-AUC systématiquement supérieure sur les configurations étudiées.
+
+**3. Les variables EXT_SOURCE jouent un rôle majeur.**
+
+Leur introduction entraîne la plus forte progression de la ROC-AUC et elles occupent les premières positions dans l'analyse de l'importance des variables.
+
+## Technologies utilisées
+
+**Langage :** Python
+
+**Bibliothèques principales :**
+
+* Pandas et NumPy — manipulation des données.
+* Matplotlib et Seaborn — visualisation.
+* Scikit-learn — préparation, modélisation et évaluation.
+* LightGBM — classification par gradient boosting.
+
+**Environnement :** Jupyter Notebook.
+
+## Limites
+
+Les résultats présentés correspondent principalement à l'ensemble de validation.
+
+La comparaison des configurations sur ce même ensemble peut introduire un biais de sélection.
+
+Par ailleurs, avant toute utilisation opérationnelle dans un contexte bancaire, il serait nécessaire d'approfondir la calibration des probabilités, la stabilité des performances et la vérification de la disponibilité temporelle des informations utilisées.
+
+## Conclusion
+
+Ce projet met en évidence l'importance du **feature engineering** et de l'enrichissement des données dans les problèmes de classification.
+
+Il démontre également qu'un algorithme plus complexe n'est pas, à lui seul, la garantie de meilleures performances : la pertinence des informations disponibles joue un rôle déterminant.
+
+L'expérimentation aboutit à la sélection de **LightGBM**, qui présente la meilleure capacité de discrimination parmi les modèles étudiés.
