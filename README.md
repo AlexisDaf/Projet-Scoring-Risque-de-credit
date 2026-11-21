@@ -25,6 +25,7 @@ Le projet suit plusieurs étapes :
 5. Optimisation des hyperparamètres par validation croisée stratifiée.
 6. Comparaison progressive des performances.
 7. Analyse de l'importance des variables et évaluation du modèle retenu.
+8. Évaluation finale, une seule fois, sur le jeu de test mis de côté dès le départ.
 
 La **ROC-AUC** est utilisée comme métrique principale de sélection.
 
@@ -58,13 +59,21 @@ Cette approche permet d'évaluer l'apport de chaque nouvelle configuration de do
 
 ### Meilleur modèle
 
-**LightGBM — Configuration M4**
+**LightGBM — Configuration M4** (20 variables), retenu sur la base de la validation.
 
-* ROC-AUC sur validation : **0,7443**
-* Average Precision : **0,2257**
-* Nombre de variables : **20**
+### Évaluation finale sur le jeu de test
 
-LightGBM présente les meilleures performances sur les cinq configurations étudiées.
+Le jeu de test (20 % des clients, soit 61 503 dossiers) a été mis de côté dès le départ et n'a servi ni à l'entraînement, ni au choix du modèle, ni au réglage des hyperparamètres. Les modèles évalués sont exactement ceux sélectionnés en validation, sans réentraînement.
+
+| Modèle (M4)           | ROC-AUC validation | ROC-AUC test | AP test | Capture@10 test | Lift@10 test |
+| --------------------- | -----------------: | -----------: | ------: | --------------: | -----------: |
+| Régression logistique |             0,7338 |       0,7356 |  0,2153 |          30,9 % |         3,09 |
+| **LightGBM**          |         **0,7443** |   **0,7484** | **0,2340** |      **32,6 %** |     **3,26** |
+
+* La performance sur le test est **au niveau de la validation** (écart de +0,004 en ROC-AUC pour LightGBM) : la sélection sur la validation n'a pas surestimé la performance.
+* Les **10 % de clients jugés les plus risqués** par LightGBM concentrent **32,6 % des défauts** du jeu de test, soit un taux de défaut 3,3 fois supérieur à la moyenne (8,1 %).
+
+LightGBM présente les meilleures performances sur les cinq configurations étudiées, en validation comme sur le test.
 
 ### Principaux enseignements
 
@@ -95,9 +104,9 @@ Leur introduction entraîne la plus forte progression de la ROC-AUC et elles occ
 
 ## Limites
 
-Les résultats présentés correspondent principalement à l'ensemble de validation.
+La comparaison des configurations et le choix du modèle ont été faits sur l'ensemble de validation ; l'évaluation finale sur un jeu de test indépendant confirme les performances (voir ci-dessus).
 
-La comparaison des configurations sur ce même ensemble peut introduire un biais de sélection.
+Le découpage entraînement / validation / test est aléatoire (stratifié sur la cible) et non temporel : il ne simule pas une mise en production où le modèle serait appliqué à des demandes postérieures.
 
 Par ailleurs, avant toute utilisation opérationnelle dans un contexte bancaire, il serait nécessaire d'approfondir la calibration des probabilités, la stabilité des performances et la vérification de la disponibilité temporelle des informations utilisées.
 
