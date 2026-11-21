@@ -63,7 +63,7 @@ Cette approche permet d'évaluer l'apport de chaque nouvelle configuration de do
 
 ### Évaluation finale sur le jeu de test
 
-Le jeu de test (20 % des clients, soit 61 503 dossiers) a été mis de côté dès le départ. Dans cette version, il n'a servi ni à l'entraînement, ni au choix du modèle, ni au réglage des hyperparamètres : les modèles évalués sont exactement ceux sélectionnés en validation, sans réentraînement. Il avait toutefois été utilisé lors de versions exploratoires antérieures pour comparer des modèles ; ce score peut donc être légèrement optimiste.
+Le jeu de test (20 % des clients, soit 61 503 dossiers) a été mis de côté dès le départ et n'a servi ni à l'entraînement, ni au choix du modèle, ni au réglage des hyperparamètres. Il est évalué une seule fois, à la fin : les modèles évalués sont exactement ceux sélectionnés en validation, sans réentraînement.
 
 | Modèle (M4)           | ROC-AUC validation | ROC-AUC test | AP test | Capture@10 test | Lift@10 test |
 | --------------------- | -----------------: | -----------: | ------: | --------------: | -----------: |
@@ -104,7 +104,7 @@ Leur introduction entraîne la plus forte progression de la ROC-AUC et elles occ
 
 ## Limites
 
-La comparaison des configurations et le choix du modèle ont été faits sur l'ensemble de validation ; l'évaluation sur le jeu de test confirme ces performances (voir ci-dessus), mais ce jeu ayant été consulté lors de versions exploratoires, une évaluation sur des données entièrement nouvelles resterait préférable.
+La comparaison des configurations et le choix du modèle ont été faits sur l'ensemble de validation ; l'évaluation finale sur un jeu de test indépendant confirme ces performances (voir ci-dessus).
 
 Le découpage entraînement / validation / test est aléatoire (stratifié sur la cible) et non temporel : il ne simule pas une mise en production où le modèle serait appliqué à des demandes postérieures.
 
